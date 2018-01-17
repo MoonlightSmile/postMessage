@@ -4,86 +4,198 @@
 <head>
   <meta charset="UTF-8">
   <title>mmessage</title>
+  <style type="text/css">
+  body {
+    background-size: cover;
+    background-position: center 0;
+    background-image: url(https://moonlightsmile.github.io/nav/mask.jpg);
+    background-repeat: no-repeat;
+    min-height: 100vh;
+  }
+
+  .formBlock {
+    display: flex;
+    justify-content: center;
+    -ms-align-items: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 30px;
+  }
+
+  .formBlock h1 {
+    color: #F3E4D1;
+  }
+
+  .formBlock input {
+    height: 20px;
+  }
+
+  ul {
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1400px;
+  }
+
+  li {
+    box-sizing: border-box;
+    padding: 30px;
+    position: relative;
+    margin-right: 30px;
+    margin-bottom: 30px;
+    list-style-type: none;
+    width: 300px;
+    height: 160px;
+    border-radius: 6px;
+    background: #F6EDEB;
+    box-shadow: 0 0 3px rgba(0, 0, 0, .1);
+    transition: all .3s
+  }
+
+  li::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+    background: #C3A39A;
+  }
+
+  li:hover {
+    box-shadow: 0 26px 40px -24px rgba(0, 36, 100, 0.3);
+    transform: translateY(-6px)
+  }
+
+  li .time {
+    position: absolute;
+    font-size: 14px;
+    bottom: 10px;
+    left: 30px;
+    color: #aaa;
+  }
+  </style>
 </head>
 
 <body>
-  <h1>留言板</h1>
-  <form>
-    <input type="text" name="name">
-    <input type="text" name="content">
-    <input type="submit" value="提交">
-  </form>
+  <div class="formBlock">
+    <h1>留言板</h1>
+    <form>
+      <label>
+        姓名：
+        <input type="text" name="name" placeholder="输入你的名字">
+      </label>
+      <label>
+        留言内容：
+        <input type="text" name="content" placeholder="输入你想留言的内容">
+      </label>
+      <input type="submit" value="提交">
+    </form>
+  </div>
   <ul class=message></ul>
   <script src="js/jquery-3.2.1.min.js"></script>
   <script src="//cdn1.lncld.net/static/js/3.4.2/av-min.js"></script>
   <script type="text/javascript">
   (function() {
-      //*****V*****
-      let view = document.querySelector("form");
-      //*****C*****
-      let control = {
-        view: null,
-        init: function(view) {
-          this.view = view
-          model.init()
-          this.bindEvent()
-          this.loadMessage()
-        },
-        bindEvent: function() {
-          this.view.addEventListener("submit", (e) => {
-            e.preventDefault()
-            let name = this.view.querySelector("input[name=name]").value
-            let content = this.view.querySelector("input[name=content]").value
-            model.save(name, content)
-          })
-        },
-        render: function() {
-          this.view.querySelector("input[name=name]").value = "";
-          this.view.querySelector("input[name=content]").value = "";
-        },
-        createNode: function(message) {
-          let name = message.name
-          let content = message.content
-          let li = document.createElement("li")
-          li.textContent = `${name}: ${content}`
-          document.querySelector(".message").appendChild(li)
-        },
-        loadMessage: function() {
-          model.fetch().then(function(message) {
-            document.querySelector(".message").innerHTML = ""
-            message.forEach(function(element, index) {
-              let attr = element.attributes
-              control.createNode(attr)
-            })
-          })
-        }
-
-      }
-      //*****M*****
-      let model = {
-        init: function() {
-          const appId = 'LFbYL9q21JFdefvmHFooVYlL-gzGzoHsz';
-          const appKey = 'o7SI4VJ7WG1l1ngGOuIVozer';
-          AV.init({ appId, appKey });
-        },
-        save: function(name, content) {
-          let Message = AV.Object.extend('Message');
-          let message = new Message();
-          message.save({
-            content: content,
-            name: name
-          }).then((object) => {
-            control.render()
-            control.loadMessage()
+    //*****V*****
+    let view = document.querySelector("form");
+    //*****C*****
+    let control = {
+      view: null,
+      init: function(view) {
+        this.view = view
+        model.init()
+        this.bindEvent()
+        this.loadMessage()
+      },
+      bindEvent: function() {
+        this.view.addEventListener("submit", (e) => {
+          e.preventDefault()
+          let name = this.view.querySelector("input[name=name]").value
+          let content = this.view.querySelector("input[name=content]").value
+          model.save(name, content)
         })
-    }, fetch: function() {
-      var query = new AV.Query('Message')
-      return query.find()
+      },
+      render: function() {
+        this.view.querySelector("input[name=name]").value = "";
+        this.view.querySelector("input[name=content]").value = "";
+      },
+      createNode: function(element) {
+        let message = element.attributes
+        let name = message.name
+        let content = message.content
+        let time = this.friendlyDate(element.createdAt)
+        console.log(time)
+        let li = document.createElement("li")
+        let span = document.createElement("span")
+        span.setAttribute("class", "time")
+        span.innerHTML = time
+        li.textContent = `${name}: ${content}`
+        li.appendChild(span)
+        document.querySelector(".message").appendChild(li)
+      },
+      loadMessage: function() {
+        model.fetch().then(function(message) {
+          document.querySelector(".message").innerHTML = ""
+          message.forEach(function(element, index) {
+            control.createNode(element)
+          })
+        })
+      },
+      friendlyDate: function(time) {
+        var curDate = new Date();
+        var offSet = curDate - time;
+        switch (true) {
+          case offSet < 1000 * 60:
+            return "刚刚";
+            break;
+          case offSet < 1000 * 60 * 60:
+            return "三分钟前";
+            break;
+          case offSet < 1000 * 60 * 60 * 24:
+            return " 八小时前";
+            break;
+          case offSet < 1000 * 60 * 60 * 24 * 30:
+            return "三天前";
+            break;
+          case offSet < 1000 * 60 * 60 * 24 * 30 * 12:
+            return "两个月前";
+            break;
+          default:
+            return "八年前";
+            break;
+        }
+      }
+
+    }
+    //*****M*****
+    let model = {
+      init: function() {
+        const appId = 'LFbYL9q21JFdefvmHFooVYlL-gzGzoHsz';
+        const appKey = 'o7SI4VJ7WG1l1ngGOuIVozer';
+        AV.init({ appId, appKey });
+      },
+      save: function(name, content) {
+        let Message = AV.Object.extend('Message');
+        let message = new Message();
+        message.save({
+          content: content,
+          name: name
+        }).then((object) => {
+          control.render()
+          control.loadMessage()
+        })
+      },
+      fetch: function() {
+        var query = new AV.Query('Message')
+        return query.find()
+      }
+
     }
 
-  }
-
-  control.init(view)
+    control.init(view)
   })()
   </script>
 </body>
