@@ -136,7 +136,7 @@
       loadMessage: function() {
         model.fetch().then(function(message) {
           document.querySelector(".message").innerHTML = ""
-          message.forEach(function(element, index) {
+          message.reverse().forEach(function(element, index) {
             control.createNode(element)
           })
         })
