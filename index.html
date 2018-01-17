@@ -23,8 +23,9 @@
   }
 
   .formBlock input[type=submit] {
-    width: 100px;
-    height: 20px;
+  }
+
+  .formBlock input[type=submit]:focus {
   }
 
   ul {
@@ -112,6 +113,11 @@
           e.preventDefault()
           let name = this.view.querySelector("input[name=name]").value
           let content = this.view.querySelector("input[name=content]").value
+          if (name === "" || content === "") {
+            console.log(1)
+            alert("请填写完整在提交")
+            return;
+          }
           model.save(name, content)
         })
       },
