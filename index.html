@@ -124,7 +124,6 @@
         let name = message.name
         let content = message.content
         let time = this.friendlyDate(element.createdAt)
-        console.log(time)
         let li = document.createElement("li")
         let span = document.createElement("span")
         span.setAttribute("class", "time")
@@ -136,15 +135,16 @@
       loadMessage: function() {
         model.fetch().then(function(message) {
           document.querySelector(".message").innerHTML = ""
-          message.reverse().forEach(function(element, index) {
+          message.reverse().some(function(element, index) {
+
             control.createNode(element)
+            return index > 10
           })
         })
       },
       friendlyDate: function(time) {
         var curDate = new Date();
         var offSet = (curDate - time) / 1000;
-        console.log(offSet)
         switch (true) {
           case offSet < 60 * 10:
             return "刚刚";
