@@ -111,7 +111,7 @@
           if (name === "" || content === "") {
             alert("请填写完整在提交")
             return;
-          }else if (name.length > 6) {
+          } else if (name.replace(/\s+/g,"").length > 10) {
             alert("用户名太长，请换个用户名。")
             return;
           }
@@ -169,7 +169,6 @@
         let g = Math.floor(Math.random() * 255);
         let b = Math.floor(Math.random() * 255);
         return `rgba(${r}, ${g}, ${b}, 0.3 )`;
-
       }
 
     }
