@@ -108,8 +108,10 @@
           let name = this.view.querySelector("input[name=name]").value
           let content = this.view.querySelector("input[name=content]").value
           if (name === "" || content === "") {
-            console.log(1)
             alert("请填写完整在提交")
+            return;
+          }else if (name.length > 6) {
+            alert("用户名太长，请换个用户名。")
             return;
           }
           model.save(name, content)
