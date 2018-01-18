@@ -125,6 +125,7 @@
         let content = message.content
         let time = this.friendlyDate(element.createdAt)
         let li = document.createElement("li")
+        li.style.backgroundColor = this.randomColor()
         let span = document.createElement("span")
         span.setAttribute("class", "time")
         span.innerHTML = time
@@ -159,6 +160,13 @@
             return `${Math.floor(offSet/60/60/24)}天前`;
             break;
         }
+      },
+      randomColor: function() {
+        let r = Math.floor(Math.random() * 255);
+        let g = Math.floor(Math.random() * 255);
+        let b = Math.floor(Math.random() * 255);
+        return `rgba(${r}, ${g}, ${b}, 0.3 )`;
+
       }
 
     }
