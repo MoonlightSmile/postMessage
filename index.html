@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <title>mmessage</title>
   <style type="text/css">
   .formBlock {
@@ -95,7 +96,7 @@
     //*****V*****
     let view = document.querySelector("form");
     //*****C*****
-    let control = {
+    const control = {
       view: null,
       init: function(view) {
         this.view = view
@@ -104,14 +105,14 @@
         this.loadMessage()
       },
       bindEvent: function() {
-        this.view.addEventListener("submit", (e) => {
+        this.view.addEventListener("submit", (e) => { 
           e.preventDefault()
           let name = this.view.querySelector("input[name=name]").value
           let content = this.view.querySelector("input[name=content]").value
           if (name === "" || content === "") {
             alert("请填写完整在提交")
             return;
-          } else if (name.replace(/\s+/g,"").length > 10) {
+          } else if (name.replace(/\s+/g, "").length > 10) {
             alert("用户名太长，请换个用户名。")
             return;
           }
@@ -127,6 +128,7 @@
         let name = message.name
         let content = message.content
         let time = this.friendlyDate(element.createdAt)
+        console.log(time)
         let li = document.createElement("li")
         li.style.backgroundColor = this.randomColor()
         let span = document.createElement("span")
@@ -149,6 +151,7 @@
       friendlyDate: function(time) {
         var curDate = new Date();
         var offSet = (curDate - time) / 1000;
+        console.log(offSet)
         switch (true) {
           case offSet < 60 * 10:
             return "刚刚";
@@ -162,6 +165,9 @@
           case (offSet < 60 * 60 * 24 * 3) && (offSet >= 60 * 60 * 24):
             return `${Math.floor(offSet/60/60/24)}天前`;
             break;
+          default:
+            return "很久很久以前";
+            break;
         }
       },
       randomColor: function() {
@@ -173,7 +179,7 @@
 
     }
     //*****M*****
-    let model = {
+    const model = {
       init: function() {
         const appId = 'LFbYL9q21JFdefvmHFooVYlL-gzGzoHsz';
         const appKey = 'o7SI4VJ7WG1l1ngGOuIVozer';
