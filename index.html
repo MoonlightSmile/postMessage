@@ -105,7 +105,7 @@
         this.loadMessage()
       },
       bindEvent: function() {
-        this.view.addEventListener("submit", (e) => { 
+        this.view.addEventListener("submit", (e) => {
           e.preventDefault()
           let name = this.view.querySelector("input[name=name]").value
           let content = this.view.querySelector("input[name=content]").value
@@ -162,7 +162,7 @@
           case (offSet < 60 * 60 * 24) && (offSet >= 60 * 60):
             return `${Math.floor(offSet/60/60)}小时前`;
             break;
-          case (offSet < 60 * 60 * 24 * 3) && (offSet >= 60 * 60 * 24):
+          case (offSet < 60 * 60 * 24 * 30) && (offSet >= 60 * 60 * 24):
             return `${Math.floor(offSet/60/60/24)}天前`;
             break;
           default:
